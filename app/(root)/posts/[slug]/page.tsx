@@ -1,11 +1,11 @@
 import { prisma } from "@/lib/db";
 
-const PostsDetail = async ({ params }) => {
-  const slugParams = await params;
+const PostsDetail = async ({ params }: { params: { slug: string } }) => {
+  const slugParams = await decodeURIComponent(params.slug);
 
   const post = await prisma.post.findUnique({
     where: {
-      slug: slugParams.slug,
+      slug: slugParams,
     },
   });
 

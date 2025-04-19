@@ -4,15 +4,13 @@ import { prisma } from "@/lib/db";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
-export async function createPost(formData: FormData) {
+export async function createPost(data: { title: string; content: string }) {
   try {
     await prisma.post.create({
       data: {
-        title: formData.get("title") as string,
-        slug: (formData.get("title") as string)
-          .replace(/\s+/g, "-")
-          .toLowerCase(),
-        content: formData.get("content") as string,
+        title: data.title,
+        slug: (data.title as string).replace(/\s+/g, "-").toLowerCase(),
+        content: data.content as string,
         author: {
           connect: {
             email: "test@mail.com",

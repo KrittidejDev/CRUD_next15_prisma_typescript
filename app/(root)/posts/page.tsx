@@ -1,4 +1,7 @@
-import AddPostForm from "@/components/forms/AddPostForm";
+import { deletePost } from "@/action/action";
+import Buttons from "@/components/Buttons/Buttons";
+import AddPostForm from "@/components/Forms/AddPostForm";
+import IconsTrash from "@/components/Icons/IconsTrash";
 import { prisma } from "@/lib/db";
 import Link from "next/link";
 
@@ -12,26 +15,6 @@ const PostsPage = async () => {
     },
   });
 
-  // const posts = await prisma.post.findMany({
-  //   where: {
-  //     published: false,
-  //     title: {
-  //       startsWith: "test",
-  //     },
-  //   },
-  //   orderBy: {
-  //     createAt: "desc",
-  //   },
-  //   select: {
-  //     id: true,
-  //     title: true,
-  //     slug: true,
-  //   },
-  //   // take: 1,
-  //   // skip: 1,
-  // });
-  // const postCount = await prisma.post.count();
-
   return (
     <div className="flex flex-col items-center gap-y-5 pt-24 text-center">
       <h1 className="text-3xl font-semibold">
@@ -39,8 +22,19 @@ const PostsPage = async () => {
       </h1>
       <ul className="border-t border-b border-black/10 py-5 leading-8">
         {user?.posts.map((post) => (
-          <li key={post.id} className="flex items-center justify-between px-5">
+          <li
+            key={post.id}
+            className="flex items-center justify-between px-5 gap-x-10"
+          >
             <Link href={`/posts/${post.slug}`}>{post.title}</Link>
+            <Buttons
+              label="X"
+              frontIcon={<IconsTrash color="red" />}
+              action={async () => {
+                "use server";
+                await deletePost(post.id);
+              }}
+            />
           </li>
         ))}
       </ul>
