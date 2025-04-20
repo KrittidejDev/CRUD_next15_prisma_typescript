@@ -25,7 +25,7 @@ const PostsPage = async () => {
         {user?.posts.map((post) => (
           <li
             key={post.id}
-            className="flex items-center justify-between p-5 gap-x-10 mb-2 border border-black/10 rounded-md"
+            className="flex items-center justify-between p-2 gap-x-10 mb-2 border border-black/10 rounded-md"
           >
             <Image
               src={post?.imageUrl ?? "/fallback.png"}
