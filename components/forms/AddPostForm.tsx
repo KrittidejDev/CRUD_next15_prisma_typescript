@@ -4,23 +4,21 @@ import { createPost } from "@/action/action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import InputUpload from "../Inputs/InputUpload";
 
 const schema = z.object({
   title: z.string().min(1, "title is required"),
-  // title: z.string(),
   content: z.string(),
+  file: z.instanceof(File).optional(),
 });
 
-type FormData = {
-  title: string;
-  content: string;
-};
+type FormData = z.infer<typeof schema>;
 
 const AddPostForm = () => {
   const {
     control,
-    reset,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -28,7 +26,7 @@ const AddPostForm = () => {
 
   const onSubmit = async (data: FormData) => {
     await createPost(data);
-    await reset();
+    reset();
   };
 
   return (
@@ -36,6 +34,15 @@ const AddPostForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-y-2 w-[300px]"
     >
+      <Controller
+        name="file"
+        control={control}
+        defaultValue={undefined}
+        render={({ field }) => (
+          <InputUpload value={field.value} onChange={field.onChange} />
+        )}
+      />
+
       <Controller
         name="title"
         control={control}
@@ -53,10 +60,11 @@ const AddPostForm = () => {
           </>
         )}
       />
+
       <Controller
         name="content"
-        defaultValue=""
         control={control}
+        defaultValue=""
         render={({ field }) => (
           <>
             <textarea
