@@ -3,6 +3,7 @@ import Buttons from "@/components/Buttons/Buttons";
 import AddPostForm from "@/components/Forms/AddPostForm";
 import IconsTrash from "@/components/Icons/IconsTrash";
 import { prisma } from "@/lib/db";
+import Image from "next/image";
 import Link from "next/link";
 
 const PostsPage = async () => {
@@ -24,8 +25,14 @@ const PostsPage = async () => {
         {user?.posts.map((post) => (
           <li
             key={post.id}
-            className="flex items-center justify-between px-5 gap-x-10"
+            className="flex items-center justify-between p-5 gap-x-10 mb-2 border border-black/10 rounded-md"
           >
+            <Image
+              src={post?.imageUrl ?? "/fallback.png"}
+              width={25}
+              height={25}
+              alt={post?.imageUrl ?? ""}
+            />
             <Link href={`/posts/${post.slug}`}>{post.title}</Link>
             <Buttons
               label="X"
